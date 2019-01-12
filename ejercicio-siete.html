@@ -1,0 +1,104 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-card/paper-card.html">
+
+<dom-module id="ejercicio-siete">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #cards {
+        padding: 10px;
+      }
+      #cards:hover {
+        cursor: pointer;
+      }
+      #title {
+        color: var(--color-title, black)
+      }
+      #container {
+        height: 100px;
+        width: auto;
+        border: 5px solid black;
+      }
+      #cards-container {
+        display: flex;
+        justify-content: space-around;
+      }
+    </style>
+    <h1 id="title">[[title]]</h1>
+    <iron-input bind-value="{{input}}">
+      <input>
+    </iron-input>
+    <button on-click="printCard">Send Info</button>
+    <div id="container" hidden="[[hidden]]">
+      [[info]]
+      <button on-click="hidde">Close</button>
+    </div>
+    <div id="cards-container">
+      <dom-repeat items="[[cards]]" as="card">
+        <template>
+          <button on-click="getData"><h1>[[card]]</h1></button>
+        </template>
+      </dom-repeat>
+    </div>
+    
+  </template>
+
+  <script>
+    class EjercicioSiete extends Polymer.Element {
+      static get is() { return 'ejercicio-siete'; }
+      static get properties() {
+        return {
+          input: {
+            type: String,
+            value: ''
+          },
+          title: {
+            type: String,
+            value: ''
+          },
+          cards: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          info: {
+            type: String,
+            value: ''
+          },
+          hidden: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+
+      printCard(){
+        const input = [this.input];
+        this.cards = [...this.cards, ...input]
+      }
+
+      getData(event){
+        const op = event;
+        const title = op.model.__data.card;
+        const tag = op.model.children[1].localName;
+        const data = [title, tag]
+        console.log(tag);
+        this.initToolTip(data)
+      }
+
+      initToolTip(data){
+        this.hidden = !this.hidden;
+        this.set('info', data)
+      }
+
+      hidde(){
+        this.hidden = !this.hidden;
+      }
+    }
+
+    window.customElements.define(EjercicioSiete.is, EjercicioSiete);
+  </script>
+</dom-module>
